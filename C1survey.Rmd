@@ -30,23 +30,20 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-INSTRUCTIONS
-Complete all tasks 1-7 using reproducible coding practices (annotation of all code). Use R syntax to solve all problems (i.e. do not manually change values/variables in datasets or check them manually to make sure things are correct except as a double or triple check). Please cut and paste each problem before each R markdown chunk and annotate your code within the chunks. Compare and consolidate your answers. Select one member of your group to walk the class through how each problem was solved. Elect one member of your group to turn in your consolidated code with answers.
-1. Import class one survey data from our Github site (https://github.com/kijohnson/ADA-2024) (The dataset is called ‘Class 1 Survey Fall 2024_di.csv’), calling the R dataframe that you create C1survey.
-2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
-3. a. Rename the column variables to something shorter and that is descriptive of what the variable is about (for example like_dogs for the ‘Do you like dogs?’ question variable) and b. Display that they are renamed.
-4. Write code to determine and display the number of factor, integer, numerical, and character variables there are in the C1survey dataset.
-5. a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
-6. a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
-7. Pick your favorite variable or variables to analyze, come up with a question you want to answer with that variable or variables, generate the code, and provide an answer to your question. Describe what you did using comments (i.e. #’s).
+
 
 # 2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
 ```{r}
+# Load the survey dataset from a specified path on the local machine
 Class_1_Survey_Fall_2024_di <- read.csv("/Users/danyang/Desktop/FL2024/ADA/Class 1 Survey Fall 2024_di.csv")
+# Assign the loaded data to C1survey for further manipulation and analysis
 C1survey <- Class_1_Survey_Fall_2024_di
+# Create a copy of C1survey in a variable called dataframe for additional operations if necessary
 dataframe <- C1survey
+# Calculate the number of observations (rows) in the dataset and display it
 num_observations <- nrow(dataframe)
 cat("The number of observations (rows) in the dataframe: ", num_observations, "\n")
+# Calculate the number of variables (columns) in the dataset and display it
 num_variables <- ncol(dataframe)
 cat("The number of variables (columns) in the dataframe: ", num_variables, "\n")
 ```
@@ -58,11 +55,13 @@ cat("The number of variables (columns) in the dataframe: ", num_variables, "\n")
 #id", "like_cats", "like_dogs", "have_desert", "slogan", "fav_day", "larkORowl", "fav_food", "fav_drink", "fav_season", "fav_month", "hobby", "program", "specialization", "stat_software", "R_exp", "coding_comfort", "coding_length", "top_three","public_health_interest", "fav_num", "bday", "bmonth", "country", "state", "city", "highest_educ_level"
 
 ```{r}
+# Renaming columns in the C1survey dataset for clarity and easier access.
+# Each new name corresponds to the content it represents, making the data more intuitive to work with.
 names(C1survey)[1:27] <- c("id", "like_cats", "like_dogs", "have_desert", "slogan", "fav_day", "larkORowl", "fav_food", 
                            "fav_drink", "fav_season", "fav_month", "hobby", "program", "specialization", "stat_software", 
                            "R_exp", "coding_comfort", "coding_length", "top_three", "public_health_interest", 
                            "fav_num", "bday", "bmonth", "country", "state", "city", "highest_educ_level")
-
+# After renaming the columns, print the updated column names to confirm the changes.
 cat("Renamed column names:\n")
 print(names(C1survey))
 
@@ -105,27 +104,32 @@ sapply(Class_1_Survey_Fall_2024_di)
 
 ```
 
-#5(wrong). a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
+#5. a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
 
 ```{r}
 # Load the dataset
-
+# Convert 'bday' to numeric after coercing to character to avoid unexpected NA introduction
 C1survey$bday_numeric <- as.numeric(as.character(C1survey$bday))
+# Convert 'bmonth' to numeric after coercing to character for the same reason
 C1survey$bmonth_numeric <- as.numeric(as.character(C1survey$bmonth))
+# Check for and impute missing values in the numeric birthday and birth month data
+# Missing values are imputed using the median of available values, excluding NAs
 
-
+# Replace NA in 'bday_numeric' with the median of the column
 C1survey$bday_numeric[is.na(C1survey$bday_numeric)] <- median(C1survey$bday_numeric, na.rm = TRUE)
+# Replace NA in 'bmonth_numeric' with the median of the column
 C1survey$bmonth_numeric[is.na(C1survey$bmonth_numeric)] <- median(C1survey$bmonth_numeric, na.rm = TRUE)
 
-
+# Calculate and display the median birthday and birth month to verify the imputation and conversion
 median_bday <- median(C1survey$bday_numeric, na.rm = TRUE)
 median_bmonth <- median(C1survey$bmonth_numeric, na.rm = TRUE)
+# Output the calculated median values for birthday and birth month
 cat("Median Birthday (day):", median_bday, "\n")
 cat("Median Birth Month:", median_bmonth, "\n")
 ```
 
 
-#6(wrong). a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
+#6. a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
 ```{r}
 # a.
 # using dplyr
