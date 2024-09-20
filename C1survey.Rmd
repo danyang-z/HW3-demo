@@ -1,0 +1,183 @@
+---
+title: "class1 lab"
+author: "Danyang"
+date: "2024-08-28"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+INSTRUCTIONS
+Complete all tasks 1-7 using reproducible coding practices (annotation of all code). Use R syntax to solve all problems (i.e. do not manually change values/variables in datasets or check them manually to make sure things are correct except as a double or triple check). Please cut and paste each problem before each R markdown chunk and annotate your code within the chunks. Compare and consolidate your answers. Select one member of your group to walk the class through how each problem was solved. Elect one member of your group to turn in your consolidated code with answers.
+1. Import class one survey data from our Github site (https://github.com/kijohnson/ADA-2024) (The dataset is called ‘Class 1 Survey Fall 2024_di.csv’), calling the R dataframe that you create C1survey.
+2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
+3. a. Rename the column variables to something shorter and that is descriptive of what the variable is about (for example like_dogs for the ‘Do you like dogs?’ question variable) and b. Display that they are renamed.
+4. Write code to determine and display the number of factor, integer, numerical, and character variables there are in the C1survey dataset.
+5. a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
+6. a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
+7. Pick your favorite variable or variables to analyze, come up with a question you want to answer with that variable or variables, generate the code, and provide an answer to your question. Describe what you did using comments (i.e. #’s).
+
+# 2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
+```{r}
+Class_1_Survey_Fall_2024_di <- read.csv("/Users/danyang/Desktop/FL2024/ADA/Class 1 Survey Fall 2024_di.csv")
+C1survey <- Class_1_Survey_Fall_2024_di
+dataframe <- C1survey
+num_observations <- nrow(dataframe)
+cat("The number of observations (rows) in the dataframe: ", num_observations, "\n")
+num_variables <- ncol(dataframe)
+cat("The number of variables (columns) in the dataframe: ", num_variables, "\n")
+```
+
+
+
+
+#3. a. Rename the column variables to something shorter and that is descriptive of what the variable is about (for example like_dogs for the ‘Do you like dogs?’ question variable) and b. Display that they are renamed.
+#id", "like_cats", "like_dogs", "have_desert", "slogan", "fav_day", "larkORowl", "fav_food", "fav_drink", "fav_season", "fav_month", "hobby", "program", "specialization", "stat_software", "R_exp", "coding_comfort", "coding_length", "top_three","public_health_interest", "fav_num", "bday", "bmonth", "country", "state", "city", "highest_educ_level"
+
+```{r}
+names(C1survey)[1:27] <- c("id", "like_cats", "like_dogs", "have_desert", "slogan", "fav_day", "larkORowl", "fav_food", 
+                           "fav_drink", "fav_season", "fav_month", "hobby", "program", "specialization", "stat_software", 
+                           "R_exp", "coding_comfort", "coding_length", "top_three", "public_health_interest", 
+                           "fav_num", "bday", "bmonth", "country", "state", "city", "highest_educ_level")
+
+cat("Renamed column names:\n")
+print(names(C1survey))
+
+```
+# 4. Write code to determine and display the number of factor, integer, numerical, and character variables there are in the C1survey dataset.
+```{r}
+# Load the data (assuming CSV file)
+C1survey <- read.csv("/Users/danyang/Desktop/FL2024/ADA/Class 1 Survey Fall 2024_di.csv")
+
+# Analyze the types of variables
+factor_vars <- character_vars <- integer_vars <- numeric_vars <- NULL
+
+# Loop through each column to classify them
+for(col in names(C1survey)) {
+  if(is.factor(C1survey[[col]])) {
+    factor_vars <- c(factor_vars, col)
+  } else if(is.character(C1survey[[col]])) {
+    character_vars <- c(character_vars, col)
+  } else if(is.integer(C1survey[[col]])) {
+    integer_vars <- c(integer_vars, col)
+  } else if(is.numeric(C1survey[[col]]) && !is.integer(C1survey[[col]])) {
+    numeric_vars <- c(numeric_vars, col)
+  }
+}
+
+# Output the results
+cat("Number of Factor variables: ", length(factor_vars), "\n")
+cat("Number of Integer variables: ", length(integer_vars), "\n")
+cat("Number of Numerical variables: ", length(numeric_vars), "\n")
+cat("Number of Character variables: ", length(character_vars), "\n")
+
+# Optionally print the names of variables in each category
+cat("Factor variables: ", toString(factor_vars), "\n")
+cat("Integer variables: ", toString(integer_vars), "\n")
+cat("Numerical variables: ", toString(numeric_vars), "\n")
+cat("Character variables: ", toString(character_vars), "\n")
+```
+```{r}
+sapply(Class_1_Survey_Fall_2024_di)
+
+```
+
+#5(wrong). a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
+
+```{r}
+# Load the dataset
+
+C1survey$bday_numeric <- as.numeric(as.character(C1survey$bday))
+C1survey$bmonth_numeric <- as.numeric(as.character(C1survey$bmonth))
+
+
+C1survey$bday_numeric[is.na(C1survey$bday_numeric)] <- median(C1survey$bday_numeric, na.rm = TRUE)
+C1survey$bmonth_numeric[is.na(C1survey$bmonth_numeric)] <- median(C1survey$bmonth_numeric, na.rm = TRUE)
+
+
+median_bday <- median(C1survey$bday_numeric, na.rm = TRUE)
+median_bmonth <- median(C1survey$bmonth_numeric, na.rm = TRUE)
+cat("Median Birthday (day):", median_bday, "\n")
+cat("Median Birth Month:", median_bmonth, "\n")
+```
+
+
+#6(wrong). a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter = 12/1 to 2/29, spring = 3/1 to 5/31, summer = 6/1 to 8/31, fall = 9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code.
+```{r}
+# a.
+# using dplyr
+C1survey <- C1survey %>%
+  mutate(bseason=case_when(bmonth %in% c(12,1,2) ~"Winter",
+                           bmonth %in% c(3,4,5) ~"Spring",
+                           bmonth %in% c(6,7,8) ~"Summer",
+                           bmonth %in% c(9,10,11) ~"Fall"))
+table(C1survey$bmonth, C1survey$bseason) # check variable
+
+C1survey$bseason_f<-factor(C1survey$bseason, levels=c("Winter", "Spring", "Summer", "Fall"))
+
+
+# b. 
+table(C1survey$bmonth, C1survey$bseason)
+table(C1survey$bmonth, C1survey$bseason_f)
+
+# c.
+tab<-addmargins(table(C1survey$bmonth, C1survey$bseason, useNA = "always"), 1)
+tab
+tab<-addmargins(table(C1survey$bmonth, C1survey$bseason_f, useNA = "always"), 1)
+tab
+
+# Births by season: Fall = 4 Winter = 9 Spring = 8 Summer = 8
+```
+#7. Pick your favorite variable or variables to analyze, come up with a question you want to answer with that variable or variables, generate the code, and provide an answer to your question. Describe what you did using comments (i.e. #’s).
+
+```{r}
+print(head(C1survey$`How.long.have.you.been.coding..in.years.or.months..`))
+
+# Convert coding experience to a uniform measure (all in months)
+# Assuming that entries are either in the format 'X years' or 'Y months'
+C1survey$CodingMonths <- sapply(C1survey$`How.long.have.you.been.coding..in.years.or.months..`,
+                                function(x) {
+                                  if(grepl("year", x)) {
+                                    as.numeric(unlist(strsplit(x, " "))[[1]]) * 12  # Convert years to months
+                                  } else if(grepl("month", x)) {
+                                    as.numeric(unlist(strsplit(x, " "))[[1]])      # Keep months as is
+                                  } else {
+                                    NA  # Handle unexpected formats
+                                  }
+                                })
+
+# Calculate the average coding experience in months
+average_experience <- mean(C1survey$CodingMonths, na.rm = TRUE)
+cat("The average coding experience in months is:", round(average_experience, 2), "\n")
+
+# Generate a histogram to visualize the distribution of coding experience
+hist(C1survey$CodingMonths, main = "Distribution of Coding Experience (Months)",
+     xlab = "Months", ylab = "Number of Respondents", breaks = 10, col = "steelblue")
+
+# Print basic statistics to understand the spread
+summary(C1survey$CodingMonths)
+```
+
